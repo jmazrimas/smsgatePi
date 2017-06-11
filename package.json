@@ -1,0 +1,23 @@
+{
+  "name": "smsgatepi",
+  "version": "1.0.0",
+  "description": "simple raspberry pi node app to poll for smsrequests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmazrimas/smsgatePi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmazrimas/smsgatePi/issues"
+  },
+  "homepage": "https://github.com/jmazrimas/smsgatePi#readme",
+  "dependencies": {
+    "http": "0.0.0",
+    "shortid": "^2.2.8"
+  }
+}
