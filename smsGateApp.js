@@ -1,5 +1,6 @@
 var http = require('http');
 var keyManager = require('./keyManager');
+var userManager = require('./userManager');
 
 var options = {
   host: 'smsgate2140.herokuapp.com',
@@ -27,6 +28,8 @@ var options = {
 // });
 
 // keyManager.generateNewKey();
-var theKey = keyManager.returnCurrentKey();
-console.log(keyManager.isKeyValid(theKey));
-console.log(keyManager.isKeyValid("bla"));
+// var theKey = keyManager.returnCurrentKey();
+// console.log(keyManager.isKeyValid(theKey));
+// console.log(keyManager.isKeyValid("bla"));
+
+// userManager.sendNewKeyToUsers(theKey);
