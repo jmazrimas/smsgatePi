@@ -7,25 +7,60 @@ var options = {
   path: '/requests'
 };
 
-// var req = http.get(options, function(res) {
-//   console.log('STATUS: ' + res.statusCode);
-//   console.log('HEADERS: ' + JSON.stringify(res.headers));
+options = 'http://localhost:5000/requests'
 
-//   // Buffer the body entirely for processing as a whole.
-//   var bodyChunks = [];
-//   res.on('data', function(chunk) {
-//     // You can process streamed parts here...
-//     bodyChunks.push(chunk);
-//   }).on('end', function() {
-//     var body = Buffer.concat(bodyChunks);
-//     console.log('BODY: ' + body);
-//     // ...and/or process the entire body here.
-//   })
-// });
+var pollingConfig = {
+	timeout: 2000
+}
 
-// req.on('error', function(e) {
-//   console.log('ERROR: ' + e.message);
-// });
+pollForRequests = function(callback) {
+	var body = [];
+
+	var req = http.get(options, function(res) {
+		var bodyChunks = [];
+	  res.on('data', function(chunk) {
+	    bodyChunks.push(chunk);
+	  }).on('end', function() {
+		  body = Buffer.concat(bodyChunks);
+		  callback(JSON.parse(body));
+	  })
+	});
+	
+	req.on('error', function(e) {
+		console.log('ERROR: ' + e.message);
+		callback(JSON.parse(body));
+	});
+
+}
+
+processRequests = function(requests) {
+	for (var i=0; i<requests.length; i++) {
+		console.log(requests[i])
+	}
+}
+
+runApp = function() {
+	console.log('BEGIN APP RUN '+ Math.floor(new Date() / 1000))
+
+	if (!keyManager.isKeyDefined()) {
+		console.log('KEY IS NOT DEFINED');
+		keyManager.generateNewKey();
+		keyManager.returnCurrentKey()
+	} else if (keyManager.isKeyExpired()) {
+		console.log('KEY IS EXPIRED');
+		keyManager.generateNewKey();
+		keyManager.returnCurrentKey()
+	}
+
+	pollForRequests(processRequests);
+
+	setTimeout(function(){
+		runApp();
+	},pollingConfig.timeout)
+}
+
+runApp();
+
 
 // keyManager.generateNewKey();
 // var theKey = keyManager.returnCurrentKey();
