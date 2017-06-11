@@ -35,8 +35,22 @@ pollForRequests = function(callback) {
 
 processRequests = function(requests) {
 	for (var i=0; i<requests.length; i++) {
-		console.log(requests[i])
+		console.log(requestIsValid(requests[i]));
 	}
+}
+
+requestIsValid = function(request) {
+	isValid = false;
+	var bodyWords = request.body.split(' ');
+
+	for (var i=0; i<bodyWords.length; i++) {
+		if (keyManager.isKeyValid(bodyWords[i])) {
+			isValid = true;
+			break;
+		}
+	}
+	console.log('KEY IS VALID: '+isValid);
+	return isValid;
 }
 
 runApp = function() {
