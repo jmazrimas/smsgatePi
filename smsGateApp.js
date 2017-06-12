@@ -1,6 +1,7 @@
 var http = require('http');
-var keyManager = require('./keyManager');
-var userManager = require('./userManager');
+var keyController = require('./keyController');
+var userController = require('./userController');
+var gpioController = require('./gpioController');
 
 var options = {
   host: 'smsgate2140.herokuapp.com',
@@ -34,7 +35,6 @@ pollForRequests = function(callback) {
 }
 
 processRequests = function(requests) {
-	console.log("REQUESTS: "+requests)
 	for (var i=0; i<requests.length; i++) {
 		if (requestIsValid(requests[i])) {
 			executeGateEvent();
@@ -48,7 +48,7 @@ requestIsValid = function(request) {
 	var bodyWords = request.body.split(' ');
 
 	for (var i=0; i<bodyWords.length; i++) {
-		if (keyManager.isKeyValid(bodyWords[i])) {
+		if (keyController.isKeyValid(bodyWords[i])) {
 			isValid = true;
 			break;
 		}
@@ -62,9 +62,10 @@ executeGateEvent = function() {
 		runningRequestLog.shift();
 	}
 	runningRequestLog.push(Math.floor(new Date() / 1000))
+	gpioController.triggerOpener();
 }
 
-killswitchTriggered = function() {
+killswitchTriggered = function() {	
 	var triggered = false;
 
 	if (runningRequestLog.length > 9) {
@@ -80,15 +81,12 @@ killswitchTriggered = function() {
 runApp = function() {
 	console.log('BEGIN APP RUN '+ Math.floor(new Date() / 1000))
 
-	if (!keyManager.isKeyDefined()) {
+	if (!keyController.isKeyDefined()) {
 		console.log('KEY IS NOT DEFINED');
-		keyManager.generateNewKey();
-		console.log(keyManager.returnCurrentKey());
-	} else if (keyManager.isKeyExpired()) {
+		userController.sendNewKeyToUsers(keyController.generateNewKey());
+	} else if (keyController.isKeyExpired()) {
 		console.log('KEY IS EXPIRED');
-		keyManager.generateNewKey();
-		keyManager.returnCurrentKey()
-		console.log(keyManager.returnCurrentKey());
+		userController.sendNewKeyToUsers(keyController.generateNewKey());
 	}
 
 	pollForRequests(processRequests);
@@ -104,11 +102,3 @@ runApp = function() {
 }
 
 runApp();
-
-
-// keyManager.generateNewKey();
-// var theKey = keyManager.returnCurrentKey();
-// console.log(keyManager.isKeyValid(theKey));
-// console.log(keyManager.isKeyValid("bla"));
-
-// userManager.sendNewKeyToUsers(theKey);
