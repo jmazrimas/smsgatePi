@@ -6,8 +6,9 @@ var client = new twilio(accountSid, authToken);
 
 module.exports = {
 	currentUsers: [
-		'16177339761',	//Joe
-		'16178698743'	//Diana
+		// '16177339761',	//Joe
+		// '16178698743'	//Diana
+		'16177339761'	//Joe
 	],
 	sendNewKeyToUsers: function(newKey) {
 		console.log('sendNewKeyFunc')

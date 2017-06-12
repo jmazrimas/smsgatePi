@@ -34,13 +34,17 @@ pollForRequests = function(callback) {
 }
 
 processRequests = function(requests) {
+	console.log("REQUESTS: "+requests)
 	for (var i=0; i<requests.length; i++) {
-		console.log(requestIsValid(requests[i]));
+		if (requestIsValid(requests[i])) {
+			executeGateEvent();
+			break;
+		}
 	}
 }
 
 requestIsValid = function(request) {
-	isValid = false;
+	isValid = true;
 	var bodyWords = request.body.split(' ');
 
 	for (var i=0; i<bodyWords.length; i++) {
@@ -49,8 +53,28 @@ requestIsValid = function(request) {
 			break;
 		}
 	}
-	console.log('KEY IS VALID: '+isValid);
 	return isValid;
+}
+
+var runningRequestLog = []
+executeGateEvent = function() {
+	if (runningRequestLog.length >= 10) {
+		runningRequestLog.shift();
+	}
+	runningRequestLog.push(Math.floor(new Date() / 1000))
+}
+
+killswitchTriggered = function() {
+	var triggered = false;
+
+	if (runningRequestLog.length > 9) {
+		var timeFromOldestRequest = Math.floor(new Date() / 1000) - runningRequestLog[0];
+		if (timeFromOldestRequest < 60) {
+			triggered = true;
+		}
+	}
+
+	return triggered;
 }
 
 runApp = function() {
@@ -59,18 +83,24 @@ runApp = function() {
 	if (!keyManager.isKeyDefined()) {
 		console.log('KEY IS NOT DEFINED');
 		keyManager.generateNewKey();
-		keyManager.returnCurrentKey()
+		console.log(keyManager.returnCurrentKey());
 	} else if (keyManager.isKeyExpired()) {
 		console.log('KEY IS EXPIRED');
 		keyManager.generateNewKey();
 		keyManager.returnCurrentKey()
+		console.log(keyManager.returnCurrentKey());
 	}
 
 	pollForRequests(processRequests);
 
-	setTimeout(function(){
-		runApp();
-	},pollingConfig.timeout)
+	if (killswitchTriggered()) {
+		console.log("KILLSWITCH TRIGGERED");
+		process.exit();
+	} else {
+		setTimeout(function(){
+			runApp();
+		},pollingConfig.timeout)
+	}
 }
 
 runApp();
