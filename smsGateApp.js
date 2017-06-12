@@ -29,7 +29,6 @@ pollForRequests = function(callback) {
 	
 	req.on('error', function(e) {
 		console.log('ERROR: ' + e.message);
-		callback(JSON.parse(body));
 	});
 
 }
