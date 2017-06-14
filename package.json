@@ -18,6 +18,7 @@
   "homepage": "https://github.com/jmazrimas/smsgatePi#readme",
   "dependencies": {
     "http": "0.0.0",
+    "node-cmd": "^3.0.0",
     "pi-gpio": "0.0.8",
     "shortid": "^2.2.8",
     "twilio": "^3.3.0"
