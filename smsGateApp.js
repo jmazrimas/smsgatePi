@@ -8,7 +8,7 @@ var options = {
   path: '/requests'
 };
 
-options = 'http://localhost:5000/requests'
+// options = 'http://localhost:5000/requests'
 
 var pollingConfig = {
 	timeout: 2000
