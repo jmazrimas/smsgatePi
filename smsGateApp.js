@@ -43,7 +43,7 @@ processRequests = function(requests) {
 }
 
 requestIsValid = function(request) {
-	isValid = true;
+	isValid = false;
 	var bodyWords = request.body.split(' ');
 
 	for (var i=0; i<bodyWords.length; i++) {
