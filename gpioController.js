@@ -1,11 +1,48 @@
-var gpio = require("pi-gpio");
+var cmd=require('node-cmd');
+
+function prepGPIO(number) {
+	cmd.get(
+	  'gpio -g mode 21 out',
+	  function(err, data, stderr){
+	  	if (err) {
+	  		console.log("ERROR: ", err)
+	  	} else {
+	  		openGPIO(number)
+	  	}
+	  }
+	);
+}
+
+function openGPIO(number) {
+	cmd.get(
+	  'gpio -g write 21 1',
+	  function(err, data, stderr){
+	  	if (err) {
+	  		console.log("ERROR: ", err)
+	  	} else {
+	  		setTimeout(function(){
+	  			closeGPIO(number)
+	  		}, 500)
+	  	}
+	  }
+	);
+}
+
+function closeGPIO(number) {
+	cmd.get(
+	  'gpio -g write 21 0',
+	  function(err, data, stderr){
+	  	if (err) {
+	  		console.log("ERROR: ", err)
+	  	} else {
+	  		console.log("SUCCESS: Triggered GPIO #", number)
+	  	}
+	  }
+	);
+}
 
 module.exports = {
 	triggerOpener: function() {
-		gpio.open(7, "output", function(err) {		// Open pin 16 for output
-			gpio.write(7, 1, function() {			// Set pin 16 high (1)
-				gpio.close(16);						// Close pin 16
-			});
-		});
+		prepGPIO(21);
 	}
 }
