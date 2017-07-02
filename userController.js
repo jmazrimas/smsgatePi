@@ -33,18 +33,8 @@ module.exports = {
 		console.log('sendNewKeyFunc')
 		// send key via twilio
 		for (var i = 0; i<this.currentUsers.length; i++) {
-			// client.messages.create({
-			//     body: 'The new key is: '+newKey,
-			//     to: this.currentUsers[i],  // Text this number
-			//     from: '+16172497949' // From a valid Twilio number
-			// }, function(err, message) {
-			// 	if (err) {
-			// 		console.log('error')
-			// 		console.log(err)
-			// 	}
-			// })
-			attemptKeySend(newKey, this.currentUsers[i])
-			
+			// attemptKeySend has recursive recovery for 8x tries
+			attemptKeySend(newKey, this.currentUsers[i]);			
 		}
 	}
 }

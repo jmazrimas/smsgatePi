@@ -16,7 +16,8 @@ module.exports = {
 		return currentkey;
 	},
 	isKeyExpired: function() {
-		return (Math.floor(new Date() / 1000) - this.keyDefinedAt) > 86400;
+		var timeNowInt = Math.floor(new Date() / 1000)
+		return (timeNowInt - keyDefinedAt) > 10;
 	},
 	isKeyDefined: function() {
 		return !!currentkey;

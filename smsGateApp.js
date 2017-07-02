@@ -83,8 +83,9 @@ runApp = function() {
 	if (!keyController.isKeyDefined()) {
 		console.log('KEY IS NOT DEFINED');
 		userController.sendNewKeyToUsers(keyController.generateNewKey());
-	} else if (keyController.isKeyExpired()) {
-		console.log('KEY IS EXPIRED');
+		// reset key when its expired AND its the middle of the day
+	} else if (keyController.isKeyExpired() && new Date().getUTCHours() == 17) {
+		console.log('KEY IS EXPIRED, RENEWING');
 		userController.sendNewKeyToUsers(keyController.generateNewKey());
 	}
 
