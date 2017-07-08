@@ -5,6 +5,7 @@ var twilio = require('twilio');
 var client = new twilio(accountSid, authToken);
 
 var attemptKeySend = function(newKey, user, count) {
+	console.log("sending key")
 	count = count ? count : 0;
 	if (count < 8) {
 		client.messages.create({

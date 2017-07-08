@@ -5,7 +5,8 @@ var gpioController = require('./gpioController');
 
 var options = {
   host: 'smsgate2140.herokuapp.com',
-  path: '/requests'
+  // path: '/requests'
+  path: '/requests/last'
 };
 
 // options = 'http://localhost:5000/requests'
@@ -13,6 +14,8 @@ var options = {
 var pollingConfig = {
 	timeout: 2000
 }
+
+var lastRequestTime = Date.parse(new Date());
 
 pollForRequests = function(callback) {
 	var body = [];
@@ -42,6 +45,18 @@ processRequests = function(requests) {
 	}
 }
 
+processRequest = function(request) {
+	if (requestIsNew(request)) {
+		console.log('NEW REQUEST')
+		lastRequestTime = Date.parse(Date(request.createdAt));
+		if (requestIsValid(request)) {
+			executeGateEvent();
+		}
+	} else {
+		console.log('NO NEW REQUESTS')
+	}
+}
+
 requestIsValid = function(request) {
 	isValid = false;
 	var bodyWords = request.body.split(' ');
@@ -53,6 +68,10 @@ requestIsValid = function(request) {
 		}
 	}
 	return isValid;
+}
+
+requestIsNew = function(request) {
+	return lastRequestTime < Date.parse(request.createdAt);
 }
 
 var runningRequestLog = []
@@ -89,7 +108,7 @@ runApp = function() {
 		userController.sendNewKeyToUsers(keyController.generateNewKey());
 	}
 
-	pollForRequests(processRequests);
+	pollForRequests(processRequest);
 
 	if (killswitchTriggered()) {
 		console.log("KILLSWITCH TRIGGERED");
