@@ -79,7 +79,7 @@ requestIsValid = function(request) {
 }
 
 requestIsNew = function(request) {
-	return lastRequestTime < Date.parse(request.createdAt);
+	return lastRequestTime+300 < Date.parse(request.createdAt);
 }
 
 var runningRequestLog = []
