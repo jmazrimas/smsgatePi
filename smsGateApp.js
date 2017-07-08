@@ -34,6 +34,8 @@ pollForRequests = function(callback) {
 		console.log('ERROR: ' + e.message);
 	});
 
+	console.log('POLL COMPLETE')
+
 }
 
 processRequests = function(requests) {
@@ -121,6 +123,7 @@ runApp = function() {
 		process.exit();
 	} else {
 		setTimeout(function(){
+			onsole.log('BEGIN NEXT RUN')
 			runApp();
 		},pollingConfig.timeout)
 	}
