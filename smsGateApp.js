@@ -59,7 +59,13 @@ processRequest = function(request) {
 
 requestIsValid = function(request) {
 	isValid = false;
-	var bodyWords = request.body.split(' ');
+	var bodyWords;
+	if (request.body) {
+		bodyWords = request.body.split(' ');
+	} else {
+		bodyWords = request.message.split(' ');
+	}
+	
 
 	for (var i=0; i<bodyWords.length; i++) {
 		if (keyController.isKeyValid(bodyWords[i])) {
