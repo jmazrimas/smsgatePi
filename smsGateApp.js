@@ -123,7 +123,7 @@ runApp = function() {
 		process.exit();
 	} else {
 		setTimeout(function(){
-			onsole.log('BEGIN NEXT RUN')
+			console.log('BEGIN NEXT RUN')
 			runApp();
 		},pollingConfig.timeout)
 	}
