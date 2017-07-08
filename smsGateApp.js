@@ -29,6 +29,10 @@ pollForRequests = function(callback) {
 		  callback(JSON.parse(body));
 	  })
 	});
+
+	req.setTimeout(500, function( ) {
+    console.log("REQUEST TIMED OUT (500ms)")
+	});
 	
 	req.on('error', function(e) {
 		console.log('ERROR: ' + e.message);
@@ -88,6 +92,7 @@ executeGateEvent = function() {
 		runningRequestLog.shift();
 	}
 	runningRequestLog.push(Math.floor(new Date() / 1000))
+	console.log('TRIGGER OPENER')
 	gpioController.triggerOpener();
 }
 
